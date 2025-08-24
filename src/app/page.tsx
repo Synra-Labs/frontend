@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import "@/app/styles/HomePage.css";
 
-// Animation variants
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0 },
@@ -18,6 +17,10 @@ export default function HomePage() {
 
   return (
     <div className="home-page container">
+      {/* decorative shapes (styled in HomePage.css) */}
+      <div className="floating-shape shape-1" aria-hidden="true" />
+      <div className="floating-shape shape-2" aria-hidden="true" />
+
       <section className="hero-section">
         <motion.h1
           initial="hidden"
@@ -27,7 +30,7 @@ export default function HomePage() {
           transition={{ duration: 1 }}
           className="hero-title"
         >
-          Ailo Forge™
+          NSPIRE™
         </motion.h1>
 
         <motion.h2
@@ -49,9 +52,9 @@ export default function HomePage() {
           transition={{ duration: 1, delay: 0.6 }}
           className="hero-description"
         >
-          Ailo Forge™ is an AI-driven platform that creates domain-specific large language models (LLMs)
-          with minimal user input. By leveraging “AI logic”, we compose custom neural architectures tailored
-          for industries like finance, biotech, manufacturing, and more.
+          Nspire™ is an AI-driven platform that creates domain-specific large language models with minimal user input.
+          Powered by Synra Labs, it composes custom neural architectures tailored for industries like finance, biotech,
+          manufacturing, and more.
         </motion.p>
 
         <motion.button
