@@ -1,10 +1,26 @@
-/* src/app/styles/ClientNavBar.css */
+/* src/app/styles/ClientNavBar.css — black & yellow */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;         /* yellow */
+  --primary-text:#0b0b0b;    /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --card:rgba(255,212,0,.06);
+}
+
+/* Bar */
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background: transparent;
+  padding: 0.9rem 1.25rem;
+  background: rgba(11,11,11,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 .navbar-container {
   display: flex;
@@ -12,24 +28,57 @@
   width: 100%;
   justify-content: space-between;
 }
+
+/* Brand */
 .navbar-logo {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #000;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
 }
+.navbar-logo::before{
+  content:"";
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--border), 0 0 16px rgba(255,212,0,.2);
+}
+
+/* Links */
 .navbar-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .navbar-links a {
-  font-size: 1rem;
-  color: #000;
+  font-size: 0.9rem;
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: 1px;
   text-decoration: none;
+  opacity: .85;
+  transition: color .15s ease, opacity .15s ease;
 }
+.navbar-links a:hover{ color: var(--primary); opacity: 1; }
+
+/* Optional CTA link: <a class="cta">Explore</a> */
+.navbar-links a.cta{
+  padding: .45rem .8rem;
+  background: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
+}
+.navbar-links a.cta:hover{
+  filter: brightness(.96);
+}
+
+/* Hamburger */
 .hamburger-btn {
   display: none;
   background: none;
@@ -37,29 +86,30 @@
 }
 .hamburger-line {
   display: block;
-  width: 25px;
+  width: 26px;
   height: 3px;
-  background: #000;
+  background: var(--primary);
   margin: 4px 0;
+  border-radius: 2px;
 }
 
-/* Responsive styles */
+/* Responsive */
 @media (max-width: 768px) {
-  .navbar-links {
-    display: none;
-  }
+  .navbar-links { display: none; }
   .navbar-links.active {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: #fff;
     position: absolute;
-    top: 60px;
-    right: 0;
-    padding: 1rem;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    top: 56px;
+    right: 12px;
+    min-width: 220px;
+    padding: 0.9rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 0 24px rgba(255,212,0,.08);
   }
-  .hamburger-btn {
-    display: block;
-  }
+  .navbar-links.active a { opacity: 1; }
+  .hamburger-btn { display: block; }
 }
