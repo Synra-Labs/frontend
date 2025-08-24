@@ -1,62 +1,113 @@
-/* nav.css – Navigation Bar Styles for Ailo Forge */
+/* nav.css – Black & Yellow Navbar */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;        /* yellow */
+  --primary-text:#0b0b0b;   /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --card:rgba(255,212,0,.06);
+}
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background: transparent;
-  }
-  
-  .navbar-logo {
-    font-size: 42px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #000;
-  }
-  
-  .navbar-links {
-    display: flex;
-    gap: 30px;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #000;
-  }
-  
-  .navbar-links a {
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-links a:hover {
-    color: #555;
-  }
-  
-  /* Hamburger style for smaller screens */
-  @media screen and (max-width: 768px) {
-    .navbar-links {
-      display: none;
-    }
-    .hamburger {
-      display: block;
-      cursor: pointer;
-      font-size: 28px;
-      color: #000;
-    }
-  }
-  
-  /* When hamburger menu is active (client-side JS toggles this class) */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(11,11,11,0.92);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar-logo {
+  font-size: 28px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.navbar-logo::before{
+  content:"";
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px var(--border), 0 0 16px rgba(255,212,0,.2);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.navbar-links a {
+  color: var(--text);
+  text-decoration: none;
+  opacity: .85;
+  transition: color .15s ease, opacity .15s ease, transform .08s ease;
+}
+.navbar-links a:hover {
+  color: var(--primary);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+/* Optional CTA styling (add class="cta" to a link) */
+.navbar-links a.cta {
+  padding: 8px 12px;
+  background: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  font-weight: 800;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
+}
+.navbar-links a.cta:hover { filter: brightness(.96); }
+
+/* Hamburger icon */
+.hamburger { display: none; }
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+  width: 26px;
+  height: 3px;
+  background: var(--primary);
+  display: block;
+  content: "";
+  border-radius: 2px;
+}
+.hamburger::before { margin-top: 6px; }
+.hamburger::after  { margin-top: 6px; }
+
+/* Responsive dropdown */
+@media (max-width: 768px) {
+  .navbar-links { display: none; }
+  .hamburger { display: block; cursor: pointer; }
+
   .navbar.active .navbar-links {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 70px;
-    right: 40px;
-    background: #fff;
-    border: 1px solid #000;
-    padding: 20px;
-    gap: 15px;
+    top: 58px;
+    right: 16px;
+    min-width: 220px;
+    padding: 12px;
+    gap: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
     z-index: 1000;
+    box-shadow: 0 0 24px rgba(255,212,0,.08);
   }
-  
+  .navbar.active .navbar-links a { opacity: 1; }
+}
