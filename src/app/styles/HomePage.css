@@ -1,9 +1,14 @@
-/* HomePage.css – Styles for the Home (landing) page */
-/* ----------------------------------------------------
-   This file defines full-screen layouts, scroll-triggered animations,
-   advanced transitions, and an investor–focused design in a strict
-   black and white color scheme.
------------------------------------------------------- */
+/* HomePage.css – Black & Yellow theme */
+/* ---------------------------------------------------- */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;         /* yellow */
+  --primary-text:#0b0b0b;    /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --grid:rgba(255,212,0,.12);
+}
 
 /* Full-screen hero section */
 .home-page {
@@ -11,12 +16,21 @@
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: #fff;
-  color: #000;
+  background-color: var(--bg);
+  color: var(--text);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+/* ambient yellow glow */
+.home-page::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(60% 40% at 75% 80%, var(--grid) 0%, transparent 70%);
+  pointer-events:none;
 }
 
 /* Hero section text styles */
@@ -28,17 +42,22 @@
 }
 
 .hero-title {
-  font-size: 86px;
-  font-weight: 600;
+  font-size: clamp(42px, 8vw, 86px);
+  font-weight: 800;
   margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--primary);
   opacity: 0;
   animation: fadeInUp 1s forwards;
 }
 
 .hero-subtitle {
-  font-size: 42px;
-  font-weight: 400;
+  font-size: clamp(22px, 4vw, 42px);
+  font-weight: 500;
   margin-bottom: 30px;
+  color: var(--text);
   opacity: 0;
   animation: fadeInUp 1s forwards;
   animation-delay: 0.3s;
@@ -48,6 +67,7 @@
   font-size: 18px;
   max-width: 800px;
   margin: 0 auto 40px;
+  color: rgba(245,245,245,.85);
   opacity: 0;
   animation: fadeInUp 1s forwards;
   animation-delay: 0.6s;
@@ -55,43 +75,38 @@
 
 /* Hero button style */
 .hero-btn {
-  font-size: 16px;
-  padding: 15px 30px;
-  background-color: #000;
-  color: #fff;
-  border: none;
+  font-size: 14px;
+  padding: 14px 24px;
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
   text-transform: uppercase;
   letter-spacing: 2px;
   cursor: pointer;
+  border-radius: 8px;
+  font-weight: 800;
   opacity: 0;
   animation: fadeInUp 1s forwards;
   animation-delay: 0.9s;
-  transition: background-color 0.3s ease;
+  transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
 }
-
-.hero-btn:hover {
-  background-color: #fff;
-  color: #000;
-}
+.hero-btn:hover { transform: translateY(-1px); }
+.hero-btn:active { transform: translateY(0); background:#f2c800; }
 
 /* Keyframe for fadeInUp animation */
 @keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Floating shapes (advanced animations) */
+/* Floating shapes (yellow outlines) */
 .floating-shape {
   position: absolute;
-  border: 2px solid #000;
-  opacity: 0.2;
+  border: 2px solid var(--primary);
+  opacity: 0.25;
   animation: float 6s ease-in-out infinite;
+  border-radius: 4px;
 }
 
 .floating-shape.shape-1 {
@@ -116,31 +131,21 @@
   100% { transform: translateY(0); }
 }
 
-/* Add a smooth scrolling effect */
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
 
-/* Extend to at least 300 lines by adding comments, spacing utilities, and redundant classes */
+/* Footer note */
 .footer-note {
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 0.6;
   margin-top: 50px;
   text-transform: uppercase;
+  color: rgba(245,245,245,.8);
 }
 
-/* Repeating dummy classes to simulate complexity (not recommended in production) */
-.dummy-line { border-bottom: 1px solid #000; margin: 10px 0; }
-.dummy-line:nth-child(odd) { border-color: #fff; }
+/* (Optional) dummy utilities kept minimal */
+.dummy-line { border-bottom: 1px solid var(--border); margin: 10px 0; }
+.dummy-line:nth-child(odd) { border-color: rgba(255,212,0,.15); }
 .dummy-block { height: 5px; }
 
-/* Repeat dummy blocks to reach 300+ lines if necessary */
-.dummy-block-1 { height: 5px; }
-.dummy-block-2 { height: 5px; }
-.dummy-block-3 { height: 5px; }
-/* ... (imagine 250+ similar lines or utilities here) ... */
-
 /* End of HomePage.css */
-/* ----------------------------------------------------
-   Total lines: ~320 (with repeated dummy utility classes)
------------------------------------------------------- */
