@@ -1,13 +1,26 @@
-/* globals.css – Global styles for Ailo Forge frontend */
+/* globals.css – Global styles for NSPiRE frontend */
 
-/* External CSS imports */
+/* External CSS imports (keep as-is; these may override some rules) */
 @import url("/css/bootstrap-grid.css");
 @import url("/css/font-awesome.min.css");
 @import url("/css/swiper.min.css");
 @import url("/css/fancybox.min.css");
 @import url("/css/style.css");
 
-/* Global resets and typography */
+/* =============== Brand tokens (black & yellow) =============== */
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;         /* yellow */
+  --primary-text:#0b0b0b;    /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --card:rgba(255,212,0,.06);
+  --grid:rgba(255,212,0,.12);
+
+  --font-body: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+/* =================== Resets & base typography =================== */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -19,46 +32,24 @@ tbody, tfoot, thead, tr, th, td, article, aside,
 canvas, details, embed, figure, figcaption, footer,
 header, hgroup, menu, nav, output, ruby, section,
 summary, time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+  margin: 0; padding: 0; border: 0; font: inherit; vertical-align: baseline;
 }
 
-/* Set box-sizing globally */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
-/* Base typography */
-html {
-  font-size: 16px;
-  line-height: 1.5;
-}
+html { font-size: 16px; line-height: 1.5; }
+
 body {
-  background-color: #fff;
-  color: #000;
-  font-family: "Outfit", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
   overflow-x: hidden;
 }
 
-/* Container utility */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
+/* ======================== Utilities ======================== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+img { max-width: 100%; height: auto; display: block; }
 
-/* Responsive images */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Utility classes */
 .text-center { text-align: center; }
 .text-uppercase { text-transform: uppercase; }
 .mt-20 { margin-top: 20px; }
@@ -66,28 +57,55 @@ img {
 .pt-20 { padding-top: 20px; }
 .pb-20 { padding-bottom: 20px; }
 
-/* Scrollbar styling (for WebKit) */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #fff; }
-::-webkit-scrollbar-thumb { background: #000; border-radius: 5px; }
-
-/* Custom link style: no underline */
+/* =================== Links, focus, selection =================== */
 a { color: inherit; text-decoration: none; }
+a:hover { color: var(--primary); }
 
-/* cursor.css – Custom Mouse Cursor */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+/* ====================== Scrollbar (WebKit) ===================== */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgba(255,212,0,.08); }
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 2px solid rgba(255,212,0,.2);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover { filter: brightness(.96); }
+
+/* ======================= Custom cursor ======================== */
+/* If you use MouseEffect.css, keep that file after globals.css so it wins */
 .custom-cursor {
   position: fixed;
-  width: 20px;
-  height: 20px;
-  background: #000;
-  border: 2px solid #000;
-  transition: background 0.2s, border 0.2s;
+  width: 18px; height: 18px;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 3px;
+  transition: background .2s, border .2s, transform .08s ease-out;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.25);
+}
+@media (max-width: 768px) { .custom-cursor { display: none; } }
+
+/* Optional inverse mode if you need it somewhere */
+body.white-bg {
+  background: #fff; color: #000;
+}
+body.white-bg .custom-cursor {
+  background: #000; border-color: #000;
 }
 
-body.white-bg .custom-cursor {
-  background: #fff;
-  border: 2px solid #fff;
+/* ===================== Motion preferences ===================== */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001s !important; transition-duration: 0s !important; }
 }
