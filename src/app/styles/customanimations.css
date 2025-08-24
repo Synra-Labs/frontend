@@ -1,147 +1,122 @@
-/* customAnimations.css – Extended animations and transitions */
-/* ----------------------------------------------------
-   This file contains advanced keyframe animations, transitions,
-   and utility classes for animated entrances, floating elements,
-   and scroll-triggered effects.
------------------------------------------------------- */
+/* customAnimations.css – Brand-aware animations (Black & Yellow) */
+/* -------------------------------------------------------------- */
 
-/* Fade in from bottom animation */
+:root{
+  --primary:#ffd400;               /* yellow */
+  --primary-text:#0b0b0b;          /* black on yellow */
+  --motion-duration: 1s;
+  --motion-ease: cubic-bezier(.2,.8,.2,1);
+  --reveal-distance: 50px;
+}
+
+/* ======================= Core Keyframes ======================= */
 @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  0% { opacity: 0; transform: translateY(var(--reveal-distance)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(calc(var(--reveal-distance) * -1)); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  0% { opacity: 0; transform: translateX(calc(var(--reveal-distance) * -1)); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  0% { opacity: 0; transform: translateX(var(--reveal-distance)); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+  0% { opacity: 0; transform: scale(.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rotateIn {
+  0% { opacity: 0; transform: rotate(-200deg) scale(.85); }
+  100% { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+
+/* brand glow (subtle yellow aura) */
+@keyframes pulseYellow {
+  0%,100% { box-shadow: 0 0 0 1px rgba(255,212,0,.18), 0 6px 18px rgba(255,212,0,.18); }
+  50%     { box-shadow: 0 0 0 1px rgba(255,212,0,.28), 0 10px 28px rgba(255,212,0,.28); }
+}
+
+/* ===================== Utility Classes ======================== */
+.animate-fadeInUp     { animation: fadeInUp var(--motion-duration) var(--motion-ease) forwards; }
+.animate-fadeInDown   { animation: fadeInDown var(--motion-duration) var(--motion-ease) forwards; }
+.animate-slideInLeft  { animation: slideInLeft var(--motion-duration) var(--motion-ease) forwards; }
+.animate-slideInRight { animation: slideInRight var(--motion-duration) var(--motion-ease) forwards; }
+.animate-zoomIn       { animation: zoomIn var(--motion-duration) var(--motion-ease) forwards; }
+.animate-rotateIn     { animation: rotateIn var(--motion-duration) var(--motion-ease) forwards; }
+
+.floating-shape       { animation: float 6s ease-in-out infinite; will-change: transform; }
+.glow-yellow          { animation: pulseYellow 2.2s ease-in-out infinite; }
+
+/* one-shot reveal helpers */
+.animate-once { animation-iteration-count: 1; }
+
+/* Duration utilities */
+.duration-300 { animation-duration: .3s; }
+.duration-500 { animation-duration: .5s; }
+.duration-700 { animation-duration: .7s; }
+.duration-1000{ animation-duration: 1s;  }
+
+/* Delay utilities */
+.delay-100 { animation-delay: .1s; }
+.delay-200 { animation-delay: .2s; }
+.delay-300 { animation-delay: .3s; }
+.delay-400 { animation-delay: .4s; }
+.delay-600 { animation-delay: .6s; }
+.delay-900 { animation-delay: .9s; }
+
+/* Easing utilities */
+.ease-smooth { animation-timing-function: var(--motion-ease); }
+.ease-linear { animation-timing-function: linear; }
+
+/* ================= Scroll-triggered Reveal ==================== */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .6s var(--motion-ease), transform .6s var(--motion-ease);
+  will-change: opacity, transform;
+}
+.scroll-animate.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ================== Interactive Transitions =================== */
+.transition-all       { transition: all .4s var(--motion-ease); }
+.transition-transform { transition: transform .4s var(--motion-ease); }
+.transition-opacity   { transition: opacity .4s var(--motion-ease); }
+
+.hover-lift:hover     { transform: translateY(-2px); }
+.press:active         { transform: translateY(1px); }
+
+/* ================= Accessibility (Reduced Motion) ============= */
+@media (prefers-reduced-motion: reduce) {
+  :root{ --motion-duration: .001s; }
+  * {
+    animation-duration: .001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
   }
-  
-  /* Fade in from top animation */
-  @keyframes fadeInDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Slide in left animation */
-  @keyframes slideInLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  
-  /* Slide in right animation */
-  @keyframes slideInRight {
-    0% {
-      opacity: 0;
-      transform: translateX(100px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  
-  /* Zoom in animation */
-  @keyframes zoomIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  /* Rotate in animation */
-  @keyframes rotateIn {
-    0% {
-      opacity: 0;
-      transform: rotate(-200deg);
-    }
-    100% {
-      opacity: 1;
-      transform: rotate(0deg);
-    }
-  }
-  
-  /* Utility animation classes */
-  .animate-fadeInUp {
-    animation: fadeInUp 1s ease forwards;
-  }
-  .animate-fadeInDown {
-    animation: fadeInDown 1s ease forwards;
-  }
-  .animate-slideInLeft {
-    animation: slideInLeft 1s ease forwards;
-  }
-  .animate-slideInRight {
-    animation: slideInRight 1s ease forwards;
-  }
-  .animate-zoomIn {
-    animation: zoomIn 1s ease forwards;
-  }
-  .animate-rotateIn {
-    animation: rotateIn 1s ease forwards;
-  }
-  
-  /* Scroll-triggered animation classes */
-  .scroll-animate {
-    opacity: 0;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .scroll-animate.visible {
-    opacity: 1;
-    transform: none;
-  }
-  
-  /* Floating shape animation */
-  @keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0); }
-  }
-  .floating-shape {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  /* Advanced transitions for interactive elements */
-  .transition-all {
-    transition: all 0.4s ease;
-  }
-  .transition-transform {
-    transition: transform 0.4s ease;
-  }
-  .transition-opacity {
-    transition: opacity 0.4s ease;
-  }
-  
-  /* Extended dummy animation classes for complexity */
-  .dummy-anim-1 { animation: fadeInUp 0.5s ease; }
-  .dummy-anim-2 { animation: slideInRight 0.5s ease; }
-  .dummy-anim-3 { animation: zoomIn 0.5s ease; }
-  .dummy-anim-4 { animation: rotateIn 0.5s ease; }
-  /* Repeat dummy animation classes to extend file length */
-  .dummy-anim-5 { animation: fadeInUp 0.5s ease; }
-  .dummy-anim-6 { animation: slideInRight 0.5s ease; }
-  .dummy-anim-7 { animation: zoomIn 0.5s ease; }
-  .dummy-anim-8 { animation: rotateIn 0.5s ease; }
-  /* ... (imagine additional 100+ lines of similar classes and comments) ... */
-  
-  /* End of customAnimations.css */
-  /* ----------------------------------------------------
-     Total lines: ~350+ lines with extensive dummy classes and detailed comments.
-  ------------------------------------------------------ */
-  
+}
+
+/* ============== Minimal “dummy” classes kept ================== */
+.dummy-anim-1 { animation: fadeInUp .5s ease; }
+.dummy-anim-2 { animation: slideInRight .5s ease; }
+.dummy-anim-3 { animation: zoomIn .5s ease; }
+.dummy-anim-4 { animation: rotateIn .5s ease; }
+/* …add more if you really want file size parity */
