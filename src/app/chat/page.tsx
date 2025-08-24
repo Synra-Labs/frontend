@@ -182,11 +182,6 @@ export default function ChatPage() {
         </button>
       </div>
 
-      {source && (
-        <div className="mt-20" style={{ fontSize: 12, opacity: 0.7 }}>
-          engine: <code>{source}</code>
-        </div>
-      )}
       {error && (
         <div className="mt-20" style={{ fontSize: 12, color: "#ff6b6b" }}>
           {error}
@@ -197,3 +192,4 @@ export default function ChatPage() {
     </div>
   );
 }
+
