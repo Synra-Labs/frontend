@@ -1,14 +1,20 @@
-/* TrainPage.css – Styles for the Training page */
-/* ----------------------------------------------------
-   This file provides a wide layout for the training interface.
-   It includes large input areas, progress bars, and pause/resume
-   buttons. The design is modern and uses only black and white.
------------------------------------------------------- */
+/* TrainPage.css – Black & Yellow theme */
+/* ---------------------------------------------------- */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;         /* yellow */
+  --primary-text:#0b0b0b;    /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --card:rgba(255,212,0,.06);
+  --grid:rgba(255,212,0,.12);
+}
 
 .train-page {
   padding: 80px 20px;
-  background-color: #fff;
-  color: #000;
+  background-color: var(--bg);
+  color: var(--text);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,125 +25,134 @@
   font-size: 48px;
   text-transform: uppercase;
   margin-bottom: 40px;
+  color: var(--primary);
+  letter-spacing: 2px;
   opacity: 0;
   animation: fadeInDown 1s forwards;
 }
 
+/* Card */
 .train-form {
   width: 100%;
   max-width: 1000px;
-  background-color: #fff;
-  padding: 40px;
-  border: 2px solid #000;
-  border-radius: 8px;
+  background-color: var(--bg);
+  padding: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
   margin-bottom: 40px;
   opacity: 0;
   animation: fadeInUp 1s forwards;
   animation-delay: 0.3s;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.08), 0 6px 18px rgba(255,212,0,.08);
 }
 
+/* Labels & inputs */
 .train-form label {
   display: block;
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 12px;
+  margin-bottom: 8px;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
 }
 
-.train-form textarea {
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #000;
-  border-radius: 4px;
-  font-size: 16px;
-  resize: vertical;
-  margin-bottom: 30px;
-}
-
+.train-form textarea,
+.train-form input[type="text"],
 .train-form input[type="file"] {
-  margin-bottom: 30px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255,212,0,.04);
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 20px;
+  outline: none;
+}
+.train-form textarea::placeholder,
+.train-form input[type="text"]::placeholder {
+  color: rgba(245,245,245,.7);
 }
 
-.button-group {
-  text-align: center;
-}
+/* Buttons */
+.button-group { text-align: center; }
 
-.btn.train-btn {
-  padding: 15px 40px;
-  background-color: #000;
-  color: #fff;
-  border: none;
+.btn.train-btn,
+.btn.pause-btn {
+  padding: 12px 20px;
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 8px;
+  font-weight: 800;
+  transition: filter .15s ease, transform .08s ease;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
 }
+.btn.train-btn:hover,
+.btn.pause-btn:hover { filter: brightness(.96); }
+.btn.train-btn:active,
+.btn.pause-btn:active { transform: translateY(1px); }
 
-.btn.train-btn:hover {
-  background-color: #fff;
-  color: #000;
-}
-
+/* Progress (determinate) */
 .progress-bar-container {
   width: 100%;
-  background-color: #000;
-  border-radius: 5px;
+  background-color: rgba(255,212,0,.10);
+  border: 1px solid var(--border);
+  border-radius: 10px;
   overflow: hidden;
   margin: 20px 0;
   position: relative;
-  height: 30px;
+  height: 16px;
 }
-
 .progress-bar {
   height: 100%;
-  background-color: #fff;
+  background-color: var(--primary);
   width: 0%;
-  transition: width 0.5s ease;
+  transition: width 0.4s ease;
 }
-
 .progress-bar-container p {
   position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* Progress (indeterminate) — add class .indeterminate on .progress-bar */
+.progress-bar.indeterminate {
+  position: relative;
   width: 100%;
-  text-align: center;
-  line-height: 30px;
-  font-size: 14px;
-  color: #000;
+  background: linear-gradient(to right,
+    rgba(255,212,0,.15) 0%,
+    var(--primary) 50%,
+    rgba(255,212,0,.15) 100%);
+  background-size: 200% 100%;
+  animation: indet 1.2s infinite ease-in-out;
+}
+@keyframes indet {
+  0%   { background-position: -100% 0; }
+  50%  { background-position: 60% 0; }
+  100% { background-position: 100% 0; }
 }
 
-/* Pause/Resume button styling */
-.btn.pause-btn {
-  padding: 10px 20px;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background-color 0.3s ease;
-}
+/* Optional helper text style */
+.success { color: #7ce38b; }
 
-.btn.pause-btn:hover {
-  background-color: #fff;
-  color: #000;
-}
-
-/* Extended dummy classes for complexity */
-.dummy-train-1 { background: #fff; }
-.dummy-train-2 { background: #000; color: #fff; }
-.dummy-train-3 { border: 1px solid #000; padding: 10px; margin: 10px 0; }
-/* ... (repeat dummy classes until reaching 300+ lines) ... */
-
-/* Keyframe animations reused */
+/* Animations */
 @keyframes fadeInUp {
   0% { opacity: 0; transform: translateY(30px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeInDown {
   0% { opacity: 0; transform: translateY(-30px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* End of TrainPage.css */
-/* ----------------------------------------------------
-   Total lines: ~350+ lines with extended dummy classes and utilities.
------------------------------------------------------- */
+/* Minimal utilities to replace long dummy classes */
+.dummy-train-1 { border: 1px dashed var(--border); }
+.dummy-train-2 { background: rgba(255,212,0,.04); }
+.dummy-train-3 { padding: 10px; margin: 10px 0; }
