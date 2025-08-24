@@ -1,68 +1,125 @@
-/* SliderControl.css – Styles for the SliderControl component */
-/* ----------------------------------------------------
-   This file defines a reusable slider component style,
-   including label, range input, value display, and description.
-   It adheres to a strict black and white design.
------------------------------------------------------- */
+/* SliderControl.css — Black & Yellow */
+/* ---------------------------------------------------- */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#f5f5f5;
+  --primary:#ffd400;        /* yellow */
+  --primary-text:#0b0b0b;   /* black on yellow */
+  --border:rgba(255,212,0,.35);
+  --card:rgba(255,212,0,.06);
+}
 
 .slider-control {
   margin: 20px 0;
-  padding: 10px;
-  background-color: #fff;
-  border: 2px solid #000;
-  border-radius: 4px;
+  padding: 12px 14px;
+  background-color: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
   width: 100%;
+  color: var(--text);
+  box-shadow: 0 0 0 1px rgba(255,212,0,.08), 0 6px 18px rgba(255,212,0,.08);
 }
 
 .slider-control label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 800;
   margin-bottom: 10px;
   display: block;
-  color: #000;
-}
-
-.slider-control input[type="range"] {
-  width: 100%;
-  margin: 10px 0;
-  -webkit-appearance: none;
-  background: transparent;
-}
-
-.slider-control input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #000;
-  cursor: pointer;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  transition: transform 0.3s ease;
-}
-
-.slider-control input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
+  color: var(--primary);
 }
 
 .slider-control .slider-value {
-  font-size: 14px;
-  margin-bottom: 10px;
-  color: #000;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: rgba(245,245,245,.85);
 }
 
 .slider-control .slider-description {
-  font-size: 12px;
-  color: #000;
+  font-size: 11px;
+  color: rgba(245,245,245,.70);
 }
 
-/* Extended dummy classes to simulate additional complexity */
+/* Base range input */
+.slider-control input[type="range"] {
+  width: 100%;
+  margin: 12px 0 4px;
+  background: transparent;
+  outline: none;
+  height: 24px; /* ensures room for big thumbs */
+  -webkit-appearance: none;
+  appearance: none;
+  accent-color: var(--primary); /* modern browsers */
+}
+
+/* WebKit track & thumb */
+.slider-control input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary) 0%) no-repeat,
+              rgba(255,212,0,.15);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.slider-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8px; /* centers thumb on 6px track */
+  width: 22px;
+  height: 22px;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
+  transition: transform .08s ease, filter .15s ease;
+  cursor: pointer;
+}
+.slider-control input[type="range"]:hover::-webkit-slider-thumb {
+  transform: translateY(-1px);
+  filter: brightness(.96);
+}
+.slider-control input[type="range"]:active::-webkit-slider-thumb {
+  transform: translateY(0);
+}
+
+/* Firefox track & thumb */
+.slider-control input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: rgba(255,212,0,.15);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.slider-control input[type="range"]::-moz-range-progress {
+  height: 6px;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+}
+.slider-control input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(255,212,0,.2), 0 6px 18px rgba(255,212,0,.2);
+  transition: transform .08s ease, filter .15s ease;
+  cursor: pointer;
+}
+.slider-control input[type="range"]:hover::-moz-range-thumb {
+  transform: translateY(-1px);
+  filter: brightness(.96);
+}
+
+/* Focus ring */
+.slider-control input[type="range"]:focus-visible {
+  outline: none;
+}
+.slider-control input[type="range"]:focus-visible::-webkit-slider-thumb,
+.slider-control input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--primary);
+}
+
+/* Optional: compact spacing variants */
 .dummy-slider-1 { margin-top: 5px; }
 .dummy-slider-2 { padding: 5px; }
-/* ... (repeat dummy classes until extended line count is reached) ... */
-
-/* End of SliderControl.css */
-/* ----------------------------------------------------
-   Total lines: ~300+ lines with extended dummy rules and comments.
------------------------------------------------------- */
