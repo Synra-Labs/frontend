@@ -1,6 +1,6 @@
 // app/modify/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useModel } from "@/context/ModelContext";
@@ -8,9 +8,32 @@ import SliderControl from "@/components/SliderControl";
 import "@/app/styles/ModifyModelPage.css";
 import Footer from "@/components/Footer";
 
+function getSessionId(): string {
+  if (typeof window === "undefined") return "server";
+  const k = "nspire_session_id";
+  let v = localStorage.getItem(k);
+  if (!v) {
+    v = crypto.randomUUID();
+    localStorage.setItem(k, v);
+  }
+  return v;
+}
+
 export default function ModifyModelPage() {
-  const { selectedModel, setIsModified } = useModel();
+  const { selectedModel, setIsModified } = useModel() as {
+    selectedModel?: string;
+    setIsModified: (b: boolean) => void;
+  };
   const router = useRouter();
+
+  const backendUrl = useMemo(
+    () =>
+      (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080").replace(
+        /\/+$/,
+        ""
+      ),
+    []
+  );
 
   const [mode, setMode] = useState<"standard" | "advanced">("standard");
   const [temperature, setTemperature] = useState(0.5);
@@ -21,22 +44,25 @@ export default function ModifyModelPage() {
   );
 
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [errMsg, setErrMsg] = useState<string>("");
 
-  const handleModify = () => {
+  async function handleModify() {
+    setErrMsg("");
     if (!selectedModel) {
       alert("Please select a model first.");
       return;
     }
 
+    // Build payload
     let payload: any;
     if (mode === "advanced") {
       try {
-        payload = JSON.parse(advancedJSON);
+        const parsed = JSON.parse(advancedJSON);
+        payload = { ...parsed, modelId: selectedModel };
       } catch {
-        return alert("Invalid JSON in advanced mode!");
+        setErrMsg("Invalid JSON in advanced mode.");
+        return;
       }
-      payload.modelId = selectedModel;
     } else {
       payload = {
         modelId: selectedModel,
@@ -46,59 +72,48 @@ export default function ModifyModelPage() {
       };
     }
 
-    // Simulate long-running modify (2–3 minutes)
-    const duration = 120000 + Math.random() * 60000; // ms
-    const tick = duration / 100;
     setIsLoading(true);
-    setProgress(0);
-
-    const timer = setInterval(() => {
-      setProgress((p) => {
-        const next = p + 1;
-        if (next >= 100) {
-          clearInterval(timer);
-          // After simulation completes, call backend
-          axios
-            .post(
-              `${(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080").replace(/\/+$/, "")}/modify-file`,
-              payload,
-              { headers: { "Content-Type": "application/json" } }
-            )
-            .then(({ data }) => {
-              if (data.success) {
-                alert("✅ Model has been modified!");
-                setIsModified(true);
-                router.push("/chat");
-              } else {
-                alert("Modify failed: " + JSON.stringify(data));
-              }
-            })
-            .catch((err) => {
-              console.error("Modify error:", err.response || err.message);
-              alert(
-                "Error modifying model: " + (err.response?.data?.detail || err.message)
-              );
-            })
-            .finally(() => setIsLoading(false));
-          return 100;
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/modify-file`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Session-Id": getSessionId(),
+          },
         }
-        return next;
-      });
-    }, tick);
-  };
+      );
+
+      if (data?.success) {
+        setIsModified(true);
+        router.push("/chat");
+      } else {
+        setErrMsg(typeof data === "string" ? data : "Modify failed");
+      }
+    } catch (err: any) {
+      const detail = err?.response?.data?.detail || err.message || "Unknown error";
+      setErrMsg(detail);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   if (!selectedModel) {
     return (
       <div className="modify-model-page container">
         <h2>No Model Selected</h2>
-        <p>Please go to <a href="/models">Model Selection</a> first.</p>
+        <p>
+          Please go to <a href="/models">Model Selection</a> first.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="modify-model-page container">
-      <h2>Modify {selectedModel}</h2>
+      <h2>Modify <code>{selectedModel}</code></h2>
+
       <div className="mode-toggle">
         <button
           className={`mode-btn ${mode === "standard" ? "active" : ""}`}
@@ -120,7 +135,7 @@ export default function ModifyModelPage() {
         <div className="standard-interface">
           <SliderControl
             label="Creativity (Temperature)"
-            min={0} max={1} step={0.01}
+            min={0} max={2} step={0.01}
             value={temperature}
             onChange={e => setTemperature(parseFloat(e.target.value))}
             description="Adjust how creative responses are."
@@ -128,16 +143,16 @@ export default function ModifyModelPage() {
           />
           <SliderControl
             label="Token Limit"
-            min={128} max={2048} step={1}
+            min={64} max={4096} step={1}
             value={tokenLimit}
             onChange={e => setTokenLimit(parseInt(e.target.value))}
             description="Set maximum tokens per response."
             disabled={isLoading}
           />
           <div className="instructions-control">
-            <label>Additional Instructions:</label>
+            <label>System Instructions</label>
             <textarea
-              placeholder="E.g. Focus on finance compliance..."
+              placeholder="E.g. You are a concise finance compliance assistant."
               value={instructions}
               onChange={e => setInstructions(e.target.value)}
               disabled={isLoading}
@@ -154,28 +169,25 @@ export default function ModifyModelPage() {
             disabled={isLoading}
           />
           <small className="json-hint">
-            Example: {"{\"temperature\":0.7,\"tokenLimit\":150,\"instructions\":\"You are a helpful assistant.\"}"}
+            Example: {"{\"temperature\":0.7,\"tokenLimit\":256,\"instructions\":\"Be brief.\"}"}
           </small>
         </div>
       )}
 
+      {errMsg && (
+        <div className="error mt-2">
+          ❌ {errMsg}
+        </div>
+      )}
+
       <div className="button-group">
-        {isLoading ? (
-          <div className="progress-bar-container">
-            <div
-              className="progress-bar"
-              style={{ width: `${progress}%` }}
-            />
-            <p>{progress}%</p>
-          </div>
-        ) : (
-          <button
-            onClick={handleModify}
-            className="btn modify-btn"
-          >
-            Modify Settings
-          </button>
-        )}
+        <button
+          onClick={handleModify}
+          className="btn modify-btn"
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving…" : "Save Settings"}
+        </button>
       </div>
 
       <Footer />
